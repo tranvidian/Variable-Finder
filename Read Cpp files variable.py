@@ -7,10 +7,8 @@ def main():
 
     root = tk.Tk()
     root.withdraw()
-
     file_path = filedialog.askopenfilename()
 
-    #with open(r"G:\Epic Games 2nd Storage\UE_5.1\Engine\Source\Runtime\Engine\Classes\GameFramework\Character.h", "r") as f:
     with open(file_path, "r") as f:
         LinesOfCode = f.readlines()
 
