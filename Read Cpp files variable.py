@@ -2,7 +2,7 @@ import tkinter as tk            #https://stackoverflow.com/questions/9319317/qui
 from tkinter import filedialog
 
 
-
+####################################################################################################################################################################################
 def main():
 
     root = tk.Tk()
@@ -13,19 +13,27 @@ def main():
         LinesOfCode = f.readlines()
 
     GrabFileName = (file_path.split("/")[-1]).split(".")
+    arrlength = len(GrabFileName)
+    if (arrlength == 1):
+        GrabFileName.append("")
+    if (arrlength <= 0):
+        GrabFileName = ""
+
     FileGrabbedName = GrabFileName[0]+ "_" + GrabFileName[1]
-    FileOutputTitle = f"OutputCPP_{FileGrabbedName}.txt"
+    FileOutputTitle = f"0.OutputCPP_{FileGrabbedName}.txt"
     try: #makes file or write to existing file
         f2 = open( FileOutputTitle, "x")
     except:
         f2 = open( FileOutputTitle , "w")
 
     #Debug File
-    DebugFileName = f"Debug{FileOutputTitle}"
+    DebugFileName = f"1.Debug_{FileOutputTitle}"
     try:
         fDebug = open(DebugFileName, "x")
     except:
         fDebug = open(DebugFileName, "w")
+
+    ############################################################
 
     PreWrite(fDebug, f2)
 
@@ -56,11 +64,12 @@ def main():
     f2.close()
     fDebug.close()
 
+    ############################################################
 
     LinePrepender( FileOutputTitle, f"Total Variables {VariableCounter} \nfrom file name {FileGrabbedName} located at:\n{file_path}" )
     CommandLineOutput( FileOutputTitle )
 
-##///////////////////////////////////
+    ####################################################################################################################################################################################
 
 def PreWrite(DebugFile, WriteToFile):
     DebugFile.write("{0:<150} {1:}\n".format(".", "(Debug) bNoParenthesesDetect / bDefined / bNoVoidCheck / bNoCheckForCurlyBrackets / bNoComments / bNoForwardDeclareShort")) #top definition
@@ -70,7 +79,7 @@ def DebugToFile( fileDebug , LineOfCode, CountedLines, Booleans):
         Line = LineOfCode.removesuffix("\n")
         FormatLineCode = f"{CountedLines} {Line}"
         #DebugLineCode = f"(Debug) bNPD: {bNoParenthesesDetect} / bD: {bDefined} / bNVC {bNoVoidCheck} / bNCFCB {bNoCheckForCurlyBrackets} / bNC {bNoComments}\n"
-        DebugLineCode = f"(Debug) bNPD: {Booleans[0]} / bD: {Booleans[1]} / bNVC {Booleans[2]} / bNCFCB {Booleans[3]} / bNC {Booleans[4]} / bNFDS bNoForwardDeclareShort\n"
+        DebugLineCode = f"(Debug) bNPD: {Booleans[0]} / bD: {Booleans[1]} / bNVC {Booleans[2]} / bNCFCB {Booleans[3]} / bNC {Booleans[4]} / bNFDS {Booleans[5]}\n"
         FinalFormat = "{0:<150} {1:}".format(FormatLineCode , DebugLineCode)
         fileDebug.write(FinalFormat)
 
