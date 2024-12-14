@@ -12,15 +12,20 @@ def main():
     with open(file_path, "r") as f:
         LinesOfCode = f.readlines()
 
+    GrabFileName = (file_path.split("/")[-1]).split(".")
+    FileGrabbedName = GrabFileName[0]+ "_" + GrabFileName[1]
+    FileOutputTitle = f"OutputCPP_{FileGrabbedName}.txt"
     try: #makes file or write to existing file
-        f2 = open(r"OutputCPP.txt", "x")
+        f2 = open( FileOutputTitle, "x")
     except:
-        f2 = open(r"OutputCPP.txt", "w")
+        f2 = open( FileOutputTitle , "w")
 
-    try: #Debug File
-        fDebug = open(r"Output_Debug.txt", "x")
+    #Debug File
+    DebugFileName = f"Debug{FileOutputTitle}"
+    try:
+        fDebug = open(DebugFileName, "x")
     except:
-        fDebug = open(r"Output_Debug.txt", "w")
+        fDebug = open(DebugFileName, "w")
 
     PreWrite(fDebug, f2)
 
@@ -43,29 +48,32 @@ def main():
             VariableCounter += 1
             f2.write(f"{LineCounter} {CodeLines}")
 
-        DebugToFile(fDebug, CodeLines, LineCounter, [bNoParenthesesDetect, bDefined, bNoVoidCheck, bNoCheckForCurlyBrackets, bNoComments] )
+        DebugToFile(fDebug, CodeLines, LineCounter, [bNoParenthesesDetect, bDefined, bNoVoidCheck, bNoCheckForCurlyBrackets, bNoComments, bNoForwardDeclareShort] )
 
         LineCounter += 1
 
-    f2.write(f"Total Varaibles {VariableCounter}")
+    f2.write(f"Total Variables {VariableCounter}")
     f2.close()
     fDebug.close()
 
-    LinePrepender("OutputCPP.txt", f"Total Varaibles {VariableCounter}" )
 
-    CommandLineOutput()
+    LinePrepender( FileOutputTitle, f"Total Variables {VariableCounter} \nfrom file name {FileGrabbedName} located at:\n{file_path}" )
+    CommandLineOutput( FileOutputTitle )
+
+##///////////////////////////////////
+
+def PreWrite(DebugFile, WriteToFile):
+    DebugFile.write("{0:<150} {1:}\n".format(".", "(Debug) bNoParenthesesDetect / bDefined / bNoVoidCheck / bNoCheckForCurlyBrackets / bNoComments / bNoForwardDeclareShort")) #top definition
+    WriteToFile.write("Reminder that it does not work 100%, it does not work against structs defintions, forward declaring (short format), and also comments correctly\n\n\n")
 
 def DebugToFile( fileDebug , LineOfCode, CountedLines, Booleans):
         Line = LineOfCode.removesuffix("\n")
         FormatLineCode = f"{CountedLines} {Line}"
         #DebugLineCode = f"(Debug) bNPD: {bNoParenthesesDetect} / bD: {bDefined} / bNVC {bNoVoidCheck} / bNCFCB {bNoCheckForCurlyBrackets} / bNC {bNoComments}\n"
-        DebugLineCode = f"(Debug) bNPD: {Booleans[0]} / bD: {Booleans[1]} / bNVC {Booleans[2]} / bNCFCB {Booleans[3]} / bNC {Booleans[4]}\n"
+        DebugLineCode = f"(Debug) bNPD: {Booleans[0]} / bD: {Booleans[1]} / bNVC {Booleans[2]} / bNCFCB {Booleans[3]} / bNC {Booleans[4]} / bNFDS bNoForwardDeclareShort\n"
         FinalFormat = "{0:<150} {1:}".format(FormatLineCode , DebugLineCode)
         fileDebug.write(FinalFormat)
 
-def PreWrite(DebugFile, WriteToFile):
-    DebugFile.write("{0:<150} {1:}\n".format(".", "(Debug) bNoParenthesesDetect / bDefined / bNoVoidCheck / bNoCheckForCurlyBrackets / bNoComments")) #top definition
-    WriteToFile.write("Reminder that it does not work 100%, it does not work against structs defintions, forward declaring (short format), and also comments correctly\n\n\n")
 
 def LinePrepender(filename, line):      #https://stackoverflow.com/questions/5914627/prepend-line-to-beginning-of-a-file
     with open(filename, 'r+') as f:
@@ -73,8 +81,8 @@ def LinePrepender(filename, line):      #https://stackoverflow.com/questions/591
         f.seek(0, 0)
         f.write(line.rstrip('\r\n') + '\n' + content)
 
-def CommandLineOutput():
-    with open(r"OutputCPP.txt", "r") as f3:
+def CommandLineOutput(FileName):
+    with open(FileName, "r") as f3:
         print("Now outputting in Command Lines\n")
         print(f3.read())
 
